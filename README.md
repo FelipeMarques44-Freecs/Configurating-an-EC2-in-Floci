@@ -1,53 +1,15 @@
-# Infraestrutura AWS Simulada com Docker e Floci
-
-## 📋 Resumo
-
-Este projeto simula uma infraestrutura AWS completa usando Docker Compose e Floci, incluindo:
-
-- ✅ VPC com CIDR 172.25.0.0/16
-- ✅ Subnet pública com CIDR 172.25.1.0/24
-- ✅ Internet Gateway
-- ✅ Tabela de rotas
-- ✅ Security Group (firewall)
-- ✅ Instância EC2 (Alpine Linux)
-- ✅ Acesso SSH funcionando
-- ✅ Floci como mock de serviços AWS
-
-## 🚀 Quickstart
-
-### Pré-requisitos
-- Docker Desktop instalado
-- Terminal/PowerShell
-
-### Iniciar
-
-```bash
-# Subir infraestrutura
+Simulated AWS Infrastructure with Docker and Floci📋 OverviewThis project simulates a complete AWS infrastructure using Docker Compose and Floci, including:✅ VPC with CIDR 172.25.0.0/16✅ Public Subnet with CIDR 172.25.1.0/24✅ Internet Gateway✅ Route Table✅ Security Group (firewall)✅ EC2 Instance (Alpine Linux)✅ Working SSH access✅ Floci as an AWS services mock🚀 QuickstartPrerequisitesDocker Desktop installedTerminal/PowerShellGetting StartedBash# Bring up the infrastructure
 docker compose up -d
 
-# Aguardar ~30 segundos para tudo ficar pronto
+# Wait ~30 seconds for everything to be ready
 docker ps
 
-# Acessar EC2 via SSH
+# Access EC2 via SSH
 ssh -p 2222 root@localhost
-# Senha: aws123
-```
+# Password: aws123
+📁 Project FilesFileDescriptiondocker-compose.ymlDefinition of the entire infrastructure (VPC, IGW, EC2, Floci)entrypoint.shScript that configures SSH on the EC2 instanceRELATORIO_INFRAESTRUTURA.mdFull report (1-2 pages) explaining each resourceSCREENSHOTS_DOCUMENTACAO.mdSimulated documentation with command outputsCOMANDOS_REFERENCIA.mdComplete guide of useful commandstest-infrastructure.batTest script to validate the infrastructure
 
-## 📁 Arquivos do Projeto
-
-| Arquivo | Descrição |
-|---------|-----------|
-| `docker-compose.yml` | Definição de toda infraestrutura (VPC, IGW, EC2, Floci) |
-| `entrypoint.sh` | Script que configura SSH na instância EC2 |
-| `RELATORIO_INFRAESTRUTURA.md` | Relatório completo (1-2 páginas) explicando cada recurso |
-| `SCREENSHOTS_DOCUMENTACAO.md` | Documentação simulada com outputs dos comandos |
-| `COMANDOS_REFERENCIA.md` | Guia completo de comandos úteis |
-| `test-infrastructure.bat` | Script de testes para validar infraestrutura |
-
-## 🏗️ Arquitetura
-
-```
-┌─────────────────────────────────────────────────┐
+🏗️ Architecture┌─────────────────────────────────────────────────┐
 │  VPC Network (172.25.0.0/16)                    │
 │                                                 │
 │  ┌──────────────────────────────────────────┐   │
@@ -70,120 +32,27 @@ ssh -p 2222 root@localhost
 │  │  Status: Running ✓                       │   │
 │  └──────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────┘
-```
+🔑 CredentialsSSH:Host: localhostPort: 2222User: rootPassword: aws123Floci API:URL: http://localhost:4566No authentication (mock)📊 Role of Each ResourceVPC (Virtual Private Cloud)Provides network isolation. All resources communicate within this private network.Public SubnetSubdivides the VPC. Allows logical organization. Subnet IPs: 172.25.1.xInternet GatewayEntry/exit point. Connects the VPC to the external world (simulated). IP: 172.25.0.1Route TableDefines how packets are routed. Default route (0.0.0.0/0) goes to the IGW.Security GroupInstance firewall. Allows SSH (port 22) only from within the VPC.EC2 InstanceCompute server. Alpine Linux running SSH. IP: 172.25.1.10Floci ServiceMock of AWS services (S3, EC2, IAM). Allows testing integration locally.
 
-## 🔑 Credenciais
-
-**SSH:**
-- Host: localhost
-- Porta: 2222
-- Usuário: root
-- Senha: aws123
-
-**Floci API:**
-- URL: http://localhost:4566
-- Sem autenticação (mock)
-
-## 📊 Papel de Cada Recurso
-
-### VPC (Virtual Private Cloud)
-Fornece isolamento de rede. Todos os recursos se comunicam dentro desta rede privada.
-
-### Subnet Pública
-Subdivide a VPC. Permite organização lógica. IPs da subnet: 172.25.1.x
-
-### Internet Gateway
-Ponto de entrada/saída. Conecta a VPC ao mundo externo (simulado). IP: 172.25.0.1
-
-### Tabela de Rotas
-Define como pacotes são roteados. Rota padrão (0.0.0.0/0) vai para IGW.
-
-### Security Group
-Firewall da instância. Libera SSH (porta 22) apenas de dentro da VPC.
-
-### Instância EC2
-Servidor computacional. Alpine Linux rodando SSH. IP: 172.25.1.10
-
-### Floci Service
-Mock de serviços AWS (S3, EC2, IAM). Permite testar integração localmente.
-
-## 🧪 Testes
-
-### Verificar status
-```bash
-docker ps
+🧪 TestsCheck statusBashdocker ps
 docker network inspect default_vpc_network
-```
-
-### Testar SSH
-```bash
-ssh -p 2222 root@localhost
-```
-
-### Testar Floci
-```bash
-curl http://localhost:4566/
-```
-
-### Verificar conectividade
-```bash
-# Dentro do EC2
+Test SSHBashssh -p 2222 root@localhost
+Test FlociBashcurl http://localhost:4566/
+Verify connectivityBash# Inside the EC2 instance
 docker exec -it ec2-lab-instance sh
-ping 172.25.0.1  # IGW
-ping 172.25.0.50 # Floci
-ifconfig         # Ver IP
-```
+ping 172.25.0.1   # IGW
+ping 172.25.0.50  # Floci
+ifconfig          # View IP
 
-## 📝 Checklist de Entrega
-
-- [x] VPC criada (172.25.0.0/16)
-- [x] Subnet pública (172.25.1.0/24)
-- [x] Internet Gateway criado
-- [x] Tabela de rotas configurada
-- [x] Security Group permitindo SSH
-- [x] Instância EC2 rodando
-- [x] Acesso SSH funcionando
-- [x] Floci rodando
-- [x] Documentação com prints/outputs
-- [x] Relatório explicando cada recurso
-
-## 🛑 Parar o Ambiente
-
-```bash
-docker compose down
-```
-
-## 🔧 Troubleshooting
-
-### SSH não conecta?
-```bash
-docker logs ec2-lab-instance  # Ver se SSH iniciou
-docker ps | grep ec2-lab      # Verificar se container está rodando
-```
-
-### Floci não responde?
-```bash
-docker logs floci-service     # Ver logs
+📝 Delivery Checklist[x] VPC created (172.25.0.0/16)[x] Public subnet (172.25.1.0/24)[x] Internet Gateway created[x] Route table configured[x] Security Group allowing SSH[x] EC2 instance running[x] SSH access working[x] Floci running[x] Documentation with prints/outputs[x] Report explaining each resource🛑 Stop the EnvironmentBashdocker compose down
+🔧 TroubleshootingSSH not connecting?Bashdocker logs ec2-lab-instance   # Check if SSH started
+docker ps | grep ec2-lab       # Verify if container is running
+Floci not responding?Bashdocker logs floci-service      # View logs
 curl -v http://localhost:4566  # Debug curl
-```
-
-### Rede não funciona?
-```bash
-docker network inspect default_vpc_network
+Network not working?Bashdocker network inspect default_vpc_network
 docker ps --format "{{.Names}}\t{{.Status}}"
-```
 
-## 📚 Documentação Completa
-
-Veja:
-- **RELATORIO_INFRAESTRUTURA.md** - Relatório acadêmico completo
-- **SCREENSHOTS_DOCUMENTACAO.md** - Outputs dos comandos
-- **COMANDOS_REFERENCIA.md** - Guia de todos os comandos
-
-## ✅ Status
-
-```
-VPC ..................... ✓
+📚 Complete DocumentationSee:RELATORIO_INFRAESTRUTURA.md - Full academic reportSCREENSHOTS_DOCUMENTACAO.md - Command outputsCOMANDOS_REFERENCIA.md - Guide of all commands✅ StatusVPC ..................... ✓
 Subnet .................. ✓
 Internet Gateway ........ ✓
 Route Table ............. ✓
@@ -193,11 +62,4 @@ SSH Access .............. ✓ (Working)
 Floci Service ........... ✓ (Healthy)
 
 Overall Status: ✓ ALL GREEN
-```
-
----
-
-**Data**: 2026-11-09  
-**Tecnologia**: Docker + Floci  
-**Objetivo**: Simulação de infraestrutura AWS para fins educacionais  
-**Status**: Funcionando completamente
+Date: 2026-11-09Technology: Docker + FlociObjective: Simulation of AWS infrastructure for educational purposesStatus: Fully operational
