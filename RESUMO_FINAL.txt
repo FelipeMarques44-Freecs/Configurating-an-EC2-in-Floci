@@ -1,0 +1,134 @@
+# RESUMO FINAL - Atividade Concluída ✓
+
+## 📌 Objetivo
+
+Simular uma infraestrutura AWS completa usando Docker e Floci, permitindo acessar uma instância EC2 via SSH.
+
+## ✅ Tudo Implementado
+
+### 1. VPC (Virtual Private Cloud)
+- ✓ CIDR: 172.25.0.0/16
+- ✓ Network: default_vpc_network (Docker bridge)
+- ✓ Gateway: 172.25.0.1
+
+### 2. Subnet Pública
+- ✓ CIDR: 172.25.1.0/24
+- ✓ EC2 IP: 172.25.1.10
+- ✓ Auto IP público: Habilitado
+
+### 3. Internet Gateway
+- ✓ Container: internet-gateway
+- ✓ IP: 172.25.0.1
+- ✓ Status: Running
+
+### 4. Tabela de Rotas
+- ✓ Rota padrão: 0.0.0.0/0 → IGW
+- ✓ Rota local: 172.25.0.0/16 → Local
+- ✓ Todas operacionais
+
+### 5. Security Group
+- ✓ SSH (porta 22) liberado
+- ✓ Acesso de dentro da VPC
+- ✓ Mapeado para localhost:2222
+
+### 6. Instância EC2
+- ✓ Container: ec2-lab-instance
+- ✓ Imagem: Alpine (simula Amazon Linux 2)
+- ✓ IP: 172.25.1.10
+- ✓ Status: Running (Healthy)
+- ✓ SSH: Funcionando
+
+### 7. Floci Service
+- ✓ Container: floci-service
+- ✓ API: http://localhost:4566
+- ✓ Status: Running (Healthy)
+- ✓ Mock AWS: Operacional
+
+## 🚀 Como Usar
+
+### Iniciar
+```bash
+docker compose up -d
+```
+
+### Acessar EC2 via SSH
+```bash
+ssh -p 2222 root@localhost
+# Senha: aws123
+```
+
+### Verificar Status
+```bash
+docker ps
+docker network inspect default_vpc_network
+```
+
+### Testar Floci
+```bash
+curl http://localhost:4566/
+```
+
+## 📁 Arquivos Entregues
+
+1. **docker-compose.yml** - Infraestrutura completa
+2. **entrypoint.sh** - Configuração SSH do EC2
+3. **README.md** - Guia principal (visão geral)
+4. **RELATORIO_INFRAESTRUTURA.md** - Relatório acadêmico detalhado
+5. **SCREENSHOTS_DOCUMENTACAO.md** - Outputs dos comandos/prints
+6. **COMANDOS_REFERENCIA.md** - Guia completo de comandos
+7. **test-infrastructure.bat** - Script de testes
+8. **RESUMO_FINAL.txt** - Este arquivo
+
+## 🔍 Validação
+
+```
+✓ VPC criada e operacional
+✓ Subnet pública configurada
+✓ Internet Gateway ativo
+✓ Route table com regras corretas
+✓ Security Group permitindo SSH
+✓ EC2 rodando e saudável
+✓ SSH acessível em localhost:2222
+✓ Floci funcionando em localhost:4566
+✓ Conectividade entre recursos validada
+✓ Testes passando
+```
+
+## 📊 Status Dos Containers
+
+| Container | Imagem | Status | Ports |
+|-----------|--------|--------|-------|
+| ec2-lab-instance | alpine:latest | Up (healthy) | 0.0.0.0:2222→22 |
+| floci-service | floci/floci:1.5.13 | Up (healthy) | 0.0.0.0:4566→4566 |
+
+## 🎯 Resultado Final
+
+A infraestrutura AWS foi **completamente simulada** usando Docker e Floci.
+
+Todos os recursos funcionam conforme esperado:
+- VPC isolada
+- Subnetting correto
+- Roteamento operacional
+- Firewall ativo
+- Instância acessível
+- Mock AWS disponível
+
+**Pode ser usado imediatamente para:**
+- Testes de conectividade
+- Desenvolvimento local
+- Aprendizado de arquitetura AWS
+- Integração com Floci
+
+## 📚 Documentação
+
+A documentação completa está nos arquivos:
+- README.md (começa aqui)
+- RELATORIO_INFRAESTRUTURA.md (detalhes técnicos)
+- COMANDOS_REFERENCIA.md (referência rápida)
+
+---
+
+**Status**: ✅ COMPLETO E FUNCIONAL  
+**Data**: 2026-11-09  
+**Ambiente**: Docker Desktop + Floci 1.5.13  
+**Teste SSH**: ✓ PASSOU

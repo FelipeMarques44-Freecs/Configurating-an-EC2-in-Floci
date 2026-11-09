@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  # Simula um servidor EC2 na subnet pública
+  ec2-instance:
+    image: alpine:latest
+    container_name: ec2-lab-instance
+    hostname: ec2-lab-instance
+    networks:
+      vpc_network:
+        ipv4_address: 172.25.1.10
+    ports:
+      - "2222:22"
+    environment:
+      - EC2_INSTANCE_ID=i-0123456789abcdef0
+      - VPC_CIDR=172.25.0.0/16
+      - SUBNET_CIDR=172.25.1.0/24
+      - AVAILABILITY_ZONE=us-east-1a
+    volumes:
+      - ./entrypoint.sh:/entrypoint.sh
+    entrypoint: /bin/sh /entrypoint.sh
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "22"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Simula o Internet Gateway / roteador
+  internet-gateway:
+    image: alpine:latest
+    container_name: internet-gateway
+    networks:
+      vpc_network:
+        ipv4_address: 172.25.0.1
+    command: /bin/sh -c "echo 'Internet Gateway active' && sleep infinity"
+    healthcheck:
+      test: ["CMD", "echo", "OK"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Floci já está rodando, mas incluímos aqui para referência
+  floci:
+    image: floci/floci:1.5.13
+    container_name: floci-service
+    networks:
+      vpc_network:
+        ipv4_address: 172.25.0.50
+    ports:
+      - "4566:4566"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - SERVICES=s3,ec2,iam
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4566/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  vpc_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/16
